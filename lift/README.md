@@ -29,7 +29,9 @@
 - **Test.java**：测试类。
 
 ### 四、部分代码解析
-如果要查看源代码，可以从 CSDN 上下载 ZIP 文件 [源代码下载](https://download.csdn.net/download/weixin_64433668/88571842?spm=1001.2014.3001.5503)。
+如果要查看源代码，可以从 CSDN 上下载 ZIP 文件 [CSDN —— Java 实现电梯逻辑](https://download.csdn.net/download/weixin_64433668/88571842?spm=1001.2014.3001.5503)。
+
+同时也提供了 GitHub 项目地址：[GitHub —— Java 实现电梯逻辑](https://github.com/flower0wine/myself_amuse/tree/main/lift)。
 #### 1、Lift.java 核心代码
 ```java
 /**
