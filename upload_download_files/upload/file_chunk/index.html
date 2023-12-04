@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>文件分片上传与下载</title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+<noscript>
+    <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
+        Please enable it to continue.</strong>
+</noscript>
+
+<div id="app">
+    <input type="file" id="file-input">
+    <div class="drag-container" draggable="true">
+        <div class="add-icon-container">
+            <div class="icon-box"></div>
+            <div class="tip-box">点击或者将文件拖动到这上传</div>
+        </div>
+        <div class="upload-progress-container uploading">
+            <div class="progress-container">
+                <div class="progress-track">
+                    <div class="progress-thumb">
+                        <div class="progress-light"></div>
+                    </div>
+                </div>
+                <div class="progress-number">
+                    <span>已上传 </span>
+                    <span class="progress-percent">0</span>
+                    <span> %</span>
+                </div>
+                <div class="wait-server">
+                    <div class="merge-tip">合并文件中...</div>
+                    <div class="wait-minute-tip">可能需要几分钟</div>
+                </div>
+            </div>
+            <div class="upload-tools">
+                <div class="upload-tool pause"></div>
+                <div class="upload-tool start"></div>
+                <div class="upload-tool cancel"></div>
+            </div>
+        </div>
+        <div class="uploaded-container">
+            <div class="uploaded-icon-container">
+                <div class="uploaded-icon"></div>
+                <div>上传成功</div>
+            </div>
+            <div class="upload-again-container">
+                <span>重新上传</span>
+                <span class="upload-again-icon-container"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/task-queue.js"></script>
+<script src="js/svg.js"></script>
+<script src="js/index.js"></script>
+<script src="js/quick-develop.js" type="module"></script>
+</body>
+</html>
