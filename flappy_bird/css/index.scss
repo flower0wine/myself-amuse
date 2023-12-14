@@ -1,0 +1,248 @@
+$bgHeight: 512;
+$bgCount: 3;
+$bgMoveAnimation: bgMove 10s linear infinite;
+$imageDirectory: "../images/";
+
+:root {
+  --bg-width: 288px;
+  --bird-x-offset: 70px;
+}
+
+body {
+  background: #000;
+}
+
+// 背景
+.flappy-bird-container {
+  position: relative;
+  width: calc(var(--bg-width) * #{$bgCount});
+  height: #{$bgHeight}px;
+  margin: 100px auto;
+  background-image: url('#{$imageDirectory}bg_day.png');
+  animation: $bgMoveAnimation;
+  overflow: hidden;
+}
+
+.not-initial {
+  display: none;
+}
+
+@keyframes bgMove {
+  0% {
+    background-position-x: var(--bg-width);
+  }
+  100% {
+    background-position-x: calc(var(--bg-width) * -#{$bgCount + 1});
+  }
+}
+
+$landHeight: 112;
+
+// 地面
+.land {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  z-index: 10;
+  width: 100%;
+  height: #{$landHeight}px;
+  background: url('#{$imageDirectory}land.png') center;
+  animation: $bgMoveAnimation;
+}
+
+$pipeWidth: 52;
+$pipeHeight: $bgHeight - $landHeight;
+
+// 水管
+.pipe-list {
+  position: relative;
+  width: 100%;
+  height: #{$pipeHeight}px;
+}
+
+.pipe-group {
+  position: absolute;
+  top: 0;
+  width: #{$pipeWidth}px;
+  height: #{$bgHeight}px;
+  transform: translateX(calc(var(--bg-width) * #{$bgCount + 1}));
+  animation: pipeMove 10s linear infinite;
+
+  .model-pipe-group {
+    transform: translateX(0px);
+  }
+}
+
+.pipe {
+  position: absolute;
+  width: #{$pipeWidth}px;
+  height: #{$pipeHeight}px;
+  background-repeat: no-repeat;
+  background-position-x: center;
+}
+
+.pipe-top {
+  top: -#{$pipeHeight}px;
+  background-image: url("#{$imageDirectory}pipe_top.png");
+  background-position-y: 100%;
+}
+
+.pipe-bottom {
+  bottom: -#{$pipeHeight - $landHeight}px;
+  background-image: url("#{$imageDirectory}pipe_down.png");
+  background-position-y: 0%;
+}
+
+@keyframes pipeMove {
+  100% {
+    // 虽然报错(只是 sass 报错), 但是能运行, 如果换成 calc(-1px * var(--bg-width)), 虽然不报错, 但是会导致管道与背景动画运动速度不一致
+    transform: translateX(calc(-1 * var(--bg-width)));
+  }
+}
+
+
+$birdWidth: 38;
+$birdHeight: 28;
+
+// 小鸟
+.bird {
+  position: absolute;
+  top: 0;
+  left: var(--bird-x-offset);
+  transform: translateY(180px);
+  width: #{$birdWidth}px;
+  height: #{$birdHeight}px;
+  background: url("#{$imageDirectory}bird0_0.png") no-repeat center;
+  animation: flying_0 500ms steps(4) infinite,
+  birdStart 2s cubic-bezier(0.54, 0.19, 0.5, 0.83) infinite;
+}
+
+.wing-animation {
+  animation: flying_0 500ms steps(4) infinite;
+}
+
+.spring-up {
+  transition: all 500ms ease-out;
+}
+
+@each $n in 0, 1, 2 {
+  @keyframes flying_#{$n} {
+    25% {
+      background-image: url("#{$imageDirectory}bird#{$n}_1.png");
+    }
+    50% {
+      background-image: url("#{$imageDirectory}bird#{$n}_2.png");
+    }
+    75% {
+      background-image: url("#{$imageDirectory}bird#{$n}_1.png");
+    }
+  }
+}
+
+@keyframes birdStart {
+  50% {
+    transform: translateY(280px);
+  }
+}
+
+
+// 中间展示的标志
+.img-list {
+  position: absolute;
+  inset: 0;
+
+  img {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    &.middle-img {
+      top: 50%;
+    }
+
+    &.top-img {
+      top: 35%;
+    }
+
+    &.bottom-img {
+      top: 55%;
+      animation: scaleTransform 600ms linear infinite;
+    }
+  }
+}
+
+@keyframes scaleTransform {
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+.score-panel-container {
+  position: absolute;
+  inset: 0;
+}
+
+.score-panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  .score-count, .previous-score-count {
+    position: absolute;
+    display: flex;
+    right: 27px;
+  }
+
+  .score-count {
+    top: 35px;
+  }
+
+  .previous-score-count {
+    top: 77px;
+  }
+
+  .scoreMedal {
+    position: absolute;
+    top: 45px;
+    left: 31px;
+  }
+}
+
+
+// 得分
+.score-image-list {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  right: 0;
+  text-align: center;
+
+  img {
+    width: 30px;
+  }
+}
+
+
+// 其他类名
+.pause {
+  &, .pipe-group, img, .land, .bird {
+    animation-play-state: paused;
+  }
+}
+
+// not-play 表示还未进行过游戏
+.not-play {
+  .score-image-list {
+    display: none;
+  }
+
+  .pipe-group {
+    animation-play-state: paused;
+  }
+}
+
+.enter-game {
+  opacity: 0;
+  transition: opacity 2s;
+}
+

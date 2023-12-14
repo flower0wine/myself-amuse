@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>五子棋</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/tools.css">
+</head>
+<body style="opacity: 0">
+<noscript>
+    <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
+        Please enable it to continue.</strong>
+</noscript>
+
+<div class="gobang-container">
+    <div class="row-line"></div>
+    <div class="column-line"></div>
+    <div class="blank-piece"></div>
+    <div class="white-piece"></div>
+</div>
+<div class="gobang-tools">
+    <div class="operation-tool tool">
+        <div class="regret" title="ctrl + z 悔棋">悔棋</div>
+        <div class="reset">重新开始</div>
+    </div>
+    <div class="modify-tool tool">
+        <div class="modify-lattice">
+            <input type="text" id="modify-lattice" pattern="^\d{2,3}$" placeholder="">
+            <label for="modify-lattice" class="modify-title">修改棋盘大小</label>
+        </div>
+    </div>
+</div>
+
+<script src="js/index.js"></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+
+body {
+    min-height: 100vh;
+    background: -webkit-linear-gradient(top, #1CB5E0, #000046) no-repeat;
+}
+
+.gobang-container {
+    --line-long: 400px;
+    --line-short: 2px;
+    position: relative;
+    margin: 100px auto 0;
+    border-radius: 10px;
+    border: 10px solid #ccc;
+    box-shadow: 2px 2px 5px 1px #000a, 2px 2px 5px 1px #000a inset, -2px -2px 2px 0px #fffa inset;
+    background: center/cover no-repeat;
+}
+
+.row-line,
+.column-line {
+    position: absolute;
+    background-color: #000;
+}
+
+.row-line {
+    width: var(--line-long);
+    height: var(--line-short);
+}
+
+.column-line {
+    width: var(--line-short);
+    height: var(--line-long);
+}
+
+.blank-piece,
+.white-piece {
+    position: absolute;
+    z-index: 1;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+}
+
+.blank-piece {
+    top: 150px;
+    left: 150px;
+    background-color: #000;
+    box-shadow: 1px 1px 2px 1px #0009, -1px -1px 2px 0px #0009 inset, 1px 1px 2px 1px #fff5 inset;
+}
+
+.white-piece {
+    top: 100px;
+    left: 100px;
+    background-color: #fff;
+    box-shadow: 1px 1px 2px 1px #0009, -1px -1px 2px 0px #0009 inset, 1px 1px 2px 1px #fff5 inset;
+}

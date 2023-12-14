@@ -1,0 +1,79 @@
+/*
+* 功能描述：棋盘工具样式
+* 创建日期：2023 年 11 月 
+*/
+
+.gobang-tools {
+    display: flex;
+    justify-content: center;
+    margin: 50px 0 300px 0;
+}
+
+.operation-tool {
+    display: flex;
+}
+
+.regret,
+.reset {
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #fff;
+    cursor: default;
+}
+
+.regret {
+    background-color: #deae48;
+}
+
+.regret:hover {
+    background-color: #d5a747;
+}
+
+.reset {
+    margin-left: 30px;
+    background-color: #d74b4b;
+}
+
+.reset:hover {
+    background-color: #ce4848;
+}
+
+.modify-tool {
+    position: relative;
+    margin-left: 30px;
+}
+
+.modify-title {
+    position: absolute;
+    z-index: 1;
+    top: 4px;
+    left: 11px;
+    color: #fff;
+    transition: all 300ms;
+}
+
+#modify-lattice:focus-within ~ .modify-title,
+#modify-lattice:not(:placeholder-shown) ~ .modify-title {
+    font-size: 14px;
+    top: -23px;
+    left: 3px;
+}
+
+.modify-lattice {
+    width: 150px;
+}
+
+input {
+    outline: none;
+}
+
+#modify-lattice {
+    width: 100%;
+    height: 30px;
+    border: 0;
+    border-radius: 6px;
+    padding-left: 10px;
+    color: #fff;
+    background-color: #797979;
+}
