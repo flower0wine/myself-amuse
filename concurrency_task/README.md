@@ -2,7 +2,7 @@
 项目于 2023年 12月 17日创建。
 
 ### 二、项目说明
-本项目是使用 JavaScript 和 TypeScript 来实现并发队列。
+本项目是使用 JavaScript 和 TypeScript 来实现并发队列。在 src 目录中的 `concurrency_task.ts` 是源文件，其他的文件是用来测试该代码的。
 
 ### 三、项目解释
 
