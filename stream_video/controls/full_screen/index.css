@@ -1,0 +1,25 @@
+.video-box.full-screen .enter-full-screen-icon {
+  display: none;
+}
+.video-box.full-screen .exit-full-screen-icon {
+  display: block;
+}
+.video-box.full-screen .web-screen-container {
+  display: none;
+}
+
+.full-screen-container {
+  position: relative;
+}
+.full-screen-container .enter-full-screen-icon {
+  display: block;
+}
+.full-screen-container .exit-full-screen-icon {
+  display: none;
+}
+.full-screen-container .full-screen-tip-board {
+  bottom: 52px;
+  left: -21px;
+}
+
+/*# sourceMappingURL=index.css.map */

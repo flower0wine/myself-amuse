@@ -1,0 +1,173 @@
+// 功能描述: 
+// 创建时间: 2024年 01月 04日
+
+
+.barrage-setting-container {
+  position: relative;
+
+  &:hover {
+    .barrage-setting-board {
+      animation: fade 1500ms;
+    }
+  }
+}
+
+.barrage-setting-board {
+  z-index: 1;
+  left: -140px;
+  bottom: 44px;
+  width: 320px;
+  padding: 12px 20px;
+
+  .progress-tool:has(.step-mode) {
+    margin-bottom: 20px;
+  }
+
+  .progress-tool {
+    margin-bottom: 10px;
+  }
+
+  .area-tool {
+    .progress-inner-track {
+      width: 33.33%;
+    }
+  }
+
+  .speed-tool {
+    .progress-inner-track {
+      width: 50%;
+    }
+  }
+
+  .font-size-tool {
+    .progress-inner-track {
+      width: calc(5 / 12 * 100%);
+    }
+  }
+
+  .font-family-tool {
+    position: relative;
+    z-index: 2;
+    margin-bottom: 20px;
+  }
+}
+
+.barrage-bold-container {
+  display: flex;
+  align-items: center;
+
+  &.not-select-bold {
+    .selected-icon {
+      display: none;
+    }
+
+    .not-selected-icon {
+      display: block;
+    }
+  }
+
+  svg {
+    width: 14px;
+    height: 14px;
+    vertical-align: -1px;
+  }
+
+  .selected-icon {
+    display: block;
+
+    svg {
+      fill: #e04646;
+    }
+  }
+
+  .not-selected-icon {
+    display: none;
+  }
+
+  .bold-text {
+    color: #d4d4d4;
+    margin-left: 6px;
+  }
+}
+
+.select-icon-container {
+  margin-left: 20px;
+}
+
+.choose-container {
+  display: flex;
+  height: 24px;
+  margin: 10px 0 0 10px;
+}
+
+.font-family-container {
+  $height: 24px;
+  $paddingLeft: 7px;
+  position: relative;
+  width: 120px;
+  height: fit-content;
+  border-radius: 4px;
+  border: 1px solid #838383;
+  font-size: 12px;
+  color: #adadad;
+
+  &.choosing {
+    background-color: #434343ed;
+  }
+
+  .selected-font-family {
+    height: $height;
+    line-height: $height;
+    padding-left: $paddingLeft;
+  }
+
+  .drop-down-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 0;
+    height: 0;
+    border-top: 4px solid #adadad;
+    border-bottom: 4px solid transparent;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+  }
+
+  .barrage-font-family-list {
+    display: none;
+    width: 100%;
+    height: $height * 4;
+    overflow-y: auto;
+
+    /* -moz- 是为了兼容 firebox */
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      width: 4px;
+      border-radius: 2px;
+      background-color: #6a6a6a;
+    }
+
+    &::-webkit-scrollbar-track {
+      width: 4px;
+      border-radius: 2px;
+      background-color: #434343ed;
+    }
+  }
+
+  .barrage-font-family-item {
+    height: $height;
+    line-height: $height;
+    padding-left: $paddingLeft;
+
+    &:hover {
+      background-color: #595959;
+    }
+  }
+}
+
+.bold-text {
+  font-size: 12px;
+}

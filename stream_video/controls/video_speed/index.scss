@@ -1,0 +1,32 @@
+// 功能描述: 
+// 创建时间: 2023年 12月 29日
+
+.speed-container {
+  position: relative;
+
+  .speed-word {
+    white-space: nowrap;
+    padding: 5px 8px;
+  }
+}
+
+.speed-list {
+  text-align: center;
+  left: -14px;
+  bottom: 40px;
+  overflow: hidden;
+
+  .speed-item {
+    color: #c1c1c1;
+    padding: 10px 20px;
+
+    &.active {
+      color: #fff;
+      background-color: #9c9c9c59;
+    }
+
+    &:hover {
+      background-color: #9c9c9c59;
+    }
+  }
+}

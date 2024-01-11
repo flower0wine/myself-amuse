@@ -1,0 +1,29 @@
+// 功能描述: 
+// 创建时间: 2023年 12月 29日
+
+.picture-in-container {
+  position: relative;
+  
+  .enter-picture-in-icon {
+    display: block;
+  }
+
+  .exit-picture-in-icon {
+    display: none;
+  }
+
+  &.picture-in {
+    .enter-picture-in-icon {
+      display: none;
+    }
+
+    .exit-picture-in-icon {
+      display: block;
+    }
+  }
+
+  .picture-in-tip-board {
+    bottom: 47px;
+    left: -24px;
+  }
+}

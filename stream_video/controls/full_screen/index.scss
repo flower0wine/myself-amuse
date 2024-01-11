@@ -1,0 +1,35 @@
+// 功能描述: 
+// 创建时间: 2023年 12月 28日
+
+.video-box {
+  &.full-screen {
+    .enter-full-screen-icon {
+      display: none;
+    }
+
+    .exit-full-screen-icon {
+      display: block;
+    }
+
+    .web-screen-container {
+      display: none;
+    }
+  }
+}
+
+.full-screen-container {
+  position: relative;
+
+  .enter-full-screen-icon {
+    display: block;
+  }
+
+  .exit-full-screen-icon {
+    display: none;
+  }
+
+  .full-screen-tip-board {
+    bottom: 52px;
+    left: -21px;
+  }
+}

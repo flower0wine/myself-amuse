@@ -1,0 +1,73 @@
+.volume-container {
+  position: relative;
+}
+.volume-container .muted-icon {
+  display: none;
+}
+.volume-container .no-muted-icon {
+  display: block;
+}
+.volume-container.muted .muted-icon {
+  display: block;
+}
+.volume-container.muted .no-muted-icon {
+  display: none;
+}
+
+.volume-adjust-container {
+  bottom: 50px;
+  left: 0px;
+  width: 36px;
+}
+.volume-adjust-container .volume-word {
+  padding-top: 8px;
+  text-align: center;
+  font-size: 14px;
+  color: #ddd;
+}
+
+.volume-progress-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 126px;
+}
+.volume-progress-container .volume-move-board {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+.volume-progress-container .volume-bar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 4px;
+  height: 104px;
+}
+.volume-progress-container .volume-bar .volume-outer-track {
+  width: 4px;
+  height: 100%;
+  border-radius: 2px;
+  background-color: #fff;
+  overflow: hidden;
+}
+.volume-progress-container .volume-bar .volume-inner-track {
+  width: 4px;
+  height: 100%;
+  border-radius: 2px;
+  background-color: #cf3535;
+}
+.volume-progress-container .volume-thumb {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  top: -3px;
+  left: -3px;
+  background-color: #fff;
+}
+
+/*# sourceMappingURL=index.css.map */
