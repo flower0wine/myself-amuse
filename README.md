@@ -13,4 +13,5 @@
 - lift: 使用 Java 实现电梯的逻辑，使用了 Java 多线程。
 - slider: 使用原生的 JavaScript 实现轮播图。
 - upload_download_files: 使用 JavaScript 和 Java 实现大文件的上传和下载。
+- stream_video: 自实现的视频播放器。
 
