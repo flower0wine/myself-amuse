@@ -1,6 +1,6 @@
 ### 1. 项目训练到的方面
 
-可以对下面的分项进行深入剖析.
+下面的每个部分都可以单独写一张文章加以解释.
 #### 1.1. getBoundingClientRect().width 与 offsetWidth 的区别
 #### 1.2. offsetWidth、clientWidth、scrollWidth 的区别
 #### 1.3. 浏览器的渲染流程
