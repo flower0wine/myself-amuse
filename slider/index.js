@@ -20,7 +20,7 @@ let UiData = class {
         this.generateSliders();
         this.addEvent();
         this.initial();
-        // this.autoplay();
+        this.autoplay();
     }
 
     initial() {
