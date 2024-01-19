@@ -1,0 +1,81 @@
+// 功能描述: 
+// 创建时间: 2023年 12月 30日
+
+$progressBoxWidth: 100%;
+$progressBoxHeight: 4px;
+$shadowProgressBoxHeight: 2px;
+
+.progress-box {
+  position: relative;
+  height: $progressBoxHeight;
+  background-color: #dadada4f;
+
+  .progress-bar {
+    height: $progressBoxHeight;
+  }
+}
+
+.buffer-progress,
+.current-progress {
+  width: $progressBoxWidth;
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: 0 0;
+  border-radius: $progressBoxHeight / 2;
+}
+
+.buffer-progress {
+  background-color: #ffffff4f;
+}
+
+.current-progress {
+  position: absolute;
+  top: 0px;
+  background-color: #cf3535;
+}
+
+.video-progress-container {
+  $padding: 10px;
+  position: absolute;
+  top: -#{$padding};
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(#{$progressBoxWidth} - 20px);
+  padding: $padding 0;
+}
+
+.shadow-progress-box {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+
+  .progress-box {
+    height: $shadowProgressBoxHeight;
+  }
+}
+
+.video-frame-preview {
+  display: none;
+  position: absolute;
+  bottom: 17px;
+  left: 0px;
+
+  .video-frame-view {
+    width: 240px;
+    aspect-ratio: 16/9;
+    background-color: #fff;
+    vertical-align: middle;
+  }
+
+  .video-time {
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 2px 7px;
+    font-size: 12px;
+    color: #fff;
+    background-color: #6f6f6fcc;
+  }
+}
