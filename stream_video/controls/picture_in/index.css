@@ -1,0 +1,21 @@
+.picture-in-container {
+  position: relative;
+}
+.picture-in-container .enter-picture-in-icon {
+  display: block;
+}
+.picture-in-container .exit-picture-in-icon {
+  display: none;
+}
+.picture-in-container.picture-in .enter-picture-in-icon {
+  display: none;
+}
+.picture-in-container.picture-in .exit-picture-in-icon {
+  display: block;
+}
+.picture-in-container .picture-in-tip-board {
+  bottom: 47px;
+  left: -24px;
+}
+
+/*# sourceMappingURL=index.css.map */

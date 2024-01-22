@@ -1,0 +1,137 @@
+@charset "UTF-8";
+.barrage-setting-container {
+  position: relative;
+}
+.barrage-setting-container:hover .barrage-setting-board {
+  animation: fade 1500ms;
+}
+
+.barrage-setting-board {
+  z-index: 1;
+  left: -140px;
+  bottom: 44px;
+  width: 320px;
+  padding: 12px 20px;
+}
+.barrage-setting-board .progress-tool:has(.step-mode) {
+  margin-bottom: 20px;
+}
+.barrage-setting-board .progress-tool {
+  margin-bottom: 10px;
+}
+.barrage-setting-board .area-tool .progress-inner-track {
+  width: 33.33%;
+}
+.barrage-setting-board .speed-tool .progress-inner-track {
+  width: 50%;
+}
+.barrage-setting-board .font-size-tool .progress-inner-track {
+  width: calc(5 / 12 * 100%);
+}
+.barrage-setting-board .font-family-tool {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 20px;
+}
+
+.barrage-bold-container {
+  display: flex;
+  align-items: center;
+}
+.barrage-bold-container.not-select-bold .selected-icon {
+  display: none;
+}
+.barrage-bold-container.not-select-bold .not-selected-icon {
+  display: block;
+}
+.barrage-bold-container svg {
+  width: 14px;
+  height: 14px;
+  vertical-align: -1px;
+}
+.barrage-bold-container .selected-icon {
+  display: block;
+}
+.barrage-bold-container .selected-icon svg {
+  fill: #e04646;
+}
+.barrage-bold-container .not-selected-icon {
+  display: none;
+}
+.barrage-bold-container .bold-text {
+  color: #d4d4d4;
+  margin-left: 6px;
+}
+
+.select-icon-container {
+  margin-left: 20px;
+}
+
+.choose-container {
+  display: flex;
+  height: 24px;
+  margin: 10px 0 0 10px;
+}
+
+.font-family-container {
+  position: relative;
+  width: 120px;
+  height: fit-content;
+  border-radius: 4px;
+  border: 1px solid #838383;
+  font-size: 12px;
+  color: #adadad;
+}
+.font-family-container.choosing {
+  background-color: #434343ed;
+}
+.font-family-container .selected-font-family {
+  height: 24px;
+  line-height: 24px;
+  padding-left: 7px;
+}
+.font-family-container .drop-down-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 0;
+  height: 0;
+  border-top: 4px solid #adadad;
+  border-bottom: 4px solid transparent;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+}
+.font-family-container .barrage-font-family-list {
+  display: none;
+  width: 100%;
+  height: 96px;
+  overflow-y: auto;
+  /* -moz- 是为了兼容 firebox */
+}
+.font-family-container .barrage-font-family-list::-webkit-scrollbar {
+  width: 4px;
+}
+.font-family-container .barrage-font-family-list::-webkit-scrollbar-thumb {
+  width: 4px;
+  border-radius: 2px;
+  background-color: #6a6a6a;
+}
+.font-family-container .barrage-font-family-list::-webkit-scrollbar-track {
+  width: 4px;
+  border-radius: 2px;
+  background-color: #434343ed;
+}
+.font-family-container .barrage-font-family-item {
+  height: 24px;
+  line-height: 24px;
+  padding-left: 7px;
+}
+.font-family-container .barrage-font-family-item:hover {
+  background-color: #595959;
+}
+
+.bold-text {
+  font-size: 12px;
+}
+
+/*# sourceMappingURL=barrage-setting.css.map */

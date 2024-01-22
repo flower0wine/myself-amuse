@@ -1,0 +1,27 @@
+.speed-container {
+  position: relative;
+}
+.speed-container .speed-word {
+  white-space: nowrap;
+  padding: 5px 8px;
+}
+
+.speed-list {
+  text-align: center;
+  left: -14px;
+  bottom: 40px;
+  overflow: hidden;
+}
+.speed-list .speed-item {
+  color: #c1c1c1;
+  padding: 10px 20px;
+}
+.speed-list .speed-item.active {
+  color: #fff;
+  background-color: #9c9c9c59;
+}
+.speed-list .speed-item:hover {
+  background-color: #9c9c9c59;
+}
+
+/*# sourceMappingURL=index.css.map */

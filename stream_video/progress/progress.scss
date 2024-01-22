@@ -1,0 +1,110 @@
+// 功能描述: 
+// 创建时间: 2024年 01月 05日
+
+$progressDotTranslate: translate(4px, -4px);
+
+.progress-tool {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+
+  .tool-description {
+    white-space: nowrap;
+  }
+
+  .progress-info {
+    display: flex;
+  }
+
+  .progress-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 180px;
+    height: 20px;
+    margin: 0 10px;
+
+    &:hover .progress-dot {
+      animation: progressDotScaleTransform 300ms forwards;
+    }
+
+    &.step-mode {
+      .progress-inner-track {
+        background-color: transparent;
+      }
+    }
+
+    .progress-move-area {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .progress-outer-track {
+    position: relative;
+    width: 100%;
+    height: 2px;
+    background-color: #7a7a7a;
+  }
+
+  .progress-inner-track {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background-color: #e04646;
+  }
+
+  .progress-dot {
+    position: absolute;
+    right: 0px;
+    width: 10px;
+    height: 10px;
+    transform: $progressDotTranslate;
+    border-radius: 5px;
+    background-color: #e04646;
+  }
+
+  .progress-value {
+    flex-grow: 1;
+    text-align: right;
+    color: #d6d6d6;
+  }
+
+  .progress-step {
+    position: absolute;
+    top: -1px;
+    width: 100%;
+
+    .progress-item {
+      position: absolute;
+      flex: 1;
+    }
+
+    .progress-point {
+      width: 2px;
+      height: 4px;
+      background-color: #a0a0a0;
+    }
+
+    .progress-text {
+      white-space: nowrap;
+      padding-top: 4px;
+      transform: translateX(-50%);
+      color: #a3a3a3;
+    }
+  }
+}
+
+@keyframes progressDotScaleTransform {
+  from {
+    transform: $progressDotTranslate scale(1);
+  }
+  to {
+    transform: $progressDotTranslate scale(1.2);
+  }
+}
