@@ -1042,8 +1042,9 @@ function scheduleAddBarrage() {
         }
 
         let addableTrackIndexArr = window.checkAllBarrageTrackAddable();
-        let addable = addableTrackIndexArr.length > 0 && leftRangeBarrageIndex >= 0 && rightRangeBarrageIndex >= 0;
-        if (addable) {
+        let noInputAddable = addableTrackIndexArr.length > 0 && leftRangeBarrageIndex >= 0 && rightRangeBarrageIndex >= 0;
+        let inputAddable = addableTrackIndexArr.length > 0 && inputBarrageArr.length > 0;
+        if (noInputAddable || inputAddable) {
             window.addBarrageToScreen(addableTrackIndexArr);
         }
         window.scheduleAddBarrage();
@@ -1146,6 +1147,7 @@ function addBarrageToScreen(addableTrackIndexArr) {
             return;
         }
         appearedSet.add(nextBarrageIndex);
+        barrageIndex = nextBarrageIndex;
 
         let barrage;
         if (inputBarrageArray.length > 0) {
