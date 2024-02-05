@@ -96,20 +96,20 @@ let disableShortcutKeys = false;
  * 隐藏控件防抖, 防抖就是在最后一次触发时再执行
  * @type {{timeout: (function(...[*]): Promise), abort: (function(): void)}}
  */
-let hiddenControlsDebounce = getDebounce(window.hiddenControls, 2000);
+let hiddenControlsDebounce = window.getDebounce(window.hiddenControls, 2000);
 
 /**
  * 显示节流, 节流就是在指定的时间内执行一次
  * @type {function(...[*]): *}
  */
-let showControlsThrottle = getThrottle(window.showControls, 100);
+let showControlsThrottle = window.getThrottle(window.showControls, 100);
 
 /**
  * 显示控件, 不定时隐藏
  */
-function showControlsNotSchedule() {
+function showControlsNotScheduleHide() {
     controlsShow = true;
-    window.fadeIn(videoControls, VIDEO_CONTROL_DURATION, videoBox, "mousemove").then(() => {
+    window.fadeIn(videoControls, VIDEO_CONTROL_DURATION, videoBox).then(() => {
         window.execCallback(showControlsCallbackArr);
     });
     videoBox.classList.remove(HIDDEN_CURSOR_CLASS_NAME);
@@ -119,7 +119,7 @@ function showControlsNotSchedule() {
  * 直接显示控件, 并定时隐藏
  */
 function showControls() {
-    window.showControlsNotSchedule();
+    window.showControlsNotScheduleHide();
     if (!pause) {
         window.scheduleHiddenControls();
     }

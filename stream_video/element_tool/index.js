@@ -6,17 +6,20 @@
 // 使用严格模式
 'use strict';
 
-function getFadeTransition(duration) {
-    return `opacity ${duration}ms`;
+function getOpacityTransition(duration) {
+    return `opacity ${duration}ms ease-in 0s`;
 }
 
 /**
- * 检查必要的参数, 不符合直接抛出异常
- * @param causeEvent {string} 导致透明度渐变的事件名称
+ * 检查事件是否存在, 不存在直接抛出异常
+ * @param eventName {string}
  */
-function checkFadeParams(causeEvent) {
-    if (typeof causeEvent !== "string") {
-        throw new Error(`causeEvent 参数必须是字符串, 而传入的参数为 : ${causeEvent}`);
+function checkEventExist(eventName) {
+    if (typeof eventName !== "string") {
+        throw new Error(`eventName 参数必须是字符串, 而传入的参数为 : ${eventName}.`);
+    }
+    if(!("on".concat(eventName) in window)) {
+        throw new Error(`事件 ${eventName} 不是一个有效的事件名称, 例如你可以输入 mouseenter.`);
     }
 }
 
@@ -24,16 +27,16 @@ function checkFadeParams(causeEvent) {
  * 渐现动画
  * @param element {HTMLElement} 过渡元素
  * @param duration {number} 过渡时间
- * @param causeEle {HTMLElement} 导致 element 元素出现过渡的元素, 没有则传 null
- * @param {string} [causeEvent = "mouseenter"] 导致 element 元素发生过渡的事件, 默认为 mouseenter
+ * @param causeEle {HTMLElement} 导致 element 元素出现过渡的元素, 如果 element 同时也是 causeEle 时, 传入 null 即可
+ * @param {string} [eventName = mouseleave] 导致 element 发生 fadeOut 的事件名称, 默认为 mouseleave
  * @returns {Promise<void>}
  */
-function fadeIn(element, duration = 1000, causeEle, causeEvent = "mouseenter") {
-    window.checkFadeParams(causeEvent);
+function fadeIn(element, duration = 1000, causeEle, eventName = "mouseleave") {
+    window.checkEventExist(eventName);
 
     return new Promise((resolve) => {
         let computedStyle;
-        computedStyle = getComputedStyle(element);
+        computedStyle = window.getComputedStyle(element);
         // 如果元素已经显示, 就设置初始的 opacity 为元素当前的 opacity, 而不是设置 0
         // !!!注意: 由于 display 有其他的取值, 显示元素不能使用 block
         if (computedStyle.display !== "none") {
@@ -44,9 +47,9 @@ function fadeIn(element, duration = 1000, causeEle, causeEvent = "mouseenter") {
             // 不能使用 block, 因为可能会有其他的取值
             element.style.display = "";
             element.style.opacity = "0";
-            element.style.transition = getFadeTransition(duration);
+            element.style.transition = window.getOpacityTransition(duration);
             element.clientHeight;
-            computedStyle = getComputedStyle(element);
+            computedStyle = window.getComputedStyle(element);
             // 看看设置了 display: "" 后元素是否显示, 如果还没有显示就设置 block
             if (computedStyle.display === "none") {
                 element.style.display = "block";
@@ -62,10 +65,10 @@ function fadeIn(element, duration = 1000, causeEle, causeEvent = "mouseenter") {
         };
         let removeEvent = () => {
             element.removeEventListener("transitionend", transitionEnd);
-            !!causeEle && causeEle.removeEventListener("mouseleave", removeEvent);
+            !!causeEle && causeEle.removeEventListener(eventName, removeEvent);
         };
         element.addEventListener("transitionend", transitionEnd);
-        !!causeEle && causeEle.addEventListener("mouseleave", removeEvent);
+        !!causeEle && causeEle.addEventListener(eventName, removeEvent);
     });
 }
 
@@ -73,16 +76,16 @@ function fadeIn(element, duration = 1000, causeEle, causeEvent = "mouseenter") {
  * 渐隐动画
  * @param element {HTMLElement} 过渡元素
  * @param duration {number} 过渡时间
- * @param causeEle {HTMLElement} 导致 element 元素出现过渡的元素, 没有则传 null
- * @param {string} [causeEvent = "mouseenter"] 导致 element 元素发生过渡的事件, 默认为 mouseenter
+ * @param causeEle {HTMLElement} 导致 element 元素出现过渡的元素, 如果 element 同时也是 causeEle 时, 传入 null 即可
+ * @param {string} [eventName = "mouseenter"] 导致 element 元素发生 fadeIn 的事件, 默认为 mouseenter
  * @returns {Promise<void>}
  */
-function fadeOut(element, duration = 1000, causeEle, causeEvent = "mouseenter") {
-    window.checkFadeParams(causeEvent);
+function fadeOut(element, duration = 1000, causeEle, eventName = "mouseenter") {
+    window.checkEventExist(eventName);
 
     return new Promise((resolve) => {
-        let computedStyle = getComputedStyle(element);
-        element.style.transition = getFadeTransition(duration);
+        let computedStyle = window.getComputedStyle(element);
+        element.style.transition = window.getOpacityTransition(duration);
         // 渐隐不会有 display: none 的情况, 所以元素必定显示, 不考虑 !important 的情况
         element.style.opacity = computedStyle.opacity;
         element.clientHeight;
@@ -96,10 +99,10 @@ function fadeOut(element, duration = 1000, causeEle, causeEvent = "mouseenter") 
         };
         let removeEvent = () => {
             element.removeEventListener("transitionend", transitionEnd);
-            !!causeEle && causeEle.removeEventListener(causeEvent, removeEvent);
+            !!causeEle && causeEle.removeEventListener(eventName, removeEvent);
         };
         element.addEventListener("transitionend", transitionEnd);
-        !!causeEle && causeEle.addEventListener(causeEvent, removeEvent);
+        !!causeEle && causeEle.addEventListener(eventName, removeEvent);
     });
 }
 

@@ -48,7 +48,7 @@ function playVideoHandler() {
 function pauseVideoHandler() {
     pause = true;
     window.togglePauseClassName();
-    window.showControlsNotSchedule();
+    window.showControlsNotScheduleHide();
     window.execCallback(pauseVideoCallbackArr);
 }
 
