@@ -118,7 +118,7 @@ class Bird {
     }
 
     initial() {
-        this.imagesDirectory = "../images/";
+        this.imagesDirectory = "./images/";
         this.currentSkin = 0;
         this.skinList = [0, 1, 2];
         this.setInitialSpeed(1);
