@@ -3,3 +3,6 @@
 *.js.map
 .sass-cache/
 
+node_modules/
+.idea/
+

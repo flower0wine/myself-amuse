@@ -14,4 +14,5 @@
 - slider: 使用原生的 JavaScript 实现轮播图。
 - upload_download_files: 使用 JavaScript 和 Java 实现大文件的上传和下载。
 - stream_video: 自实现的视频播放器。预计实现视频的流式传输。
+- jwt: 使用 jwt 实现登录效果。
 

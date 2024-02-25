@@ -1,0 +1,15 @@
+{
+  "name": "jwt",
+  "version": "1.0.0",
+  "description": "jwt 实现登录",
+  "type": "module",
+  "scripts": {
+    "start": "node ./server.js"
+  },
+  "keywords": [],
+  "author": "flowewine",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
