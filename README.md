@@ -15,4 +15,5 @@
 - upload_download_files: 使用 JavaScript 和 Java 实现大文件的上传和下载。
 - stream_video: 自实现的视频播放器。预计实现视频的流式传输。
 - jwt: 使用 jwt 实现登录效果。
+- tetris: 使用 Vue3 实现俄罗斯方块。
 
