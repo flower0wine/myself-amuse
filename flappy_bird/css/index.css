@@ -98,10 +98,6 @@ body {
   animation: flying_0 500ms steps(4) infinite;
 }
 
-.spring-up {
-  transition: all 500ms ease-out;
-}
-
 @keyframes flying_0 {
   25% {
     background-image: url("../images/bird0_1.png");

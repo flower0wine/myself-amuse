@@ -9,6 +9,19 @@
 const notInitialClassName = "not-initial";
 const pauseClassName = "pause";
 const notPlayClassName = "not-play";
+const HIGHEST_SCORE_KEY = "highestScoreKey";
+
+/**
+ * 小鸟速度增加限流
+ * @type function
+ */
+let addBirdSpeedThrottle;
+
+/**
+ * 小鸟上升限流
+ * @type function
+ */
+let birdUpThrottle;
 
 class FlappyBirdGame {
     /**
@@ -82,6 +95,16 @@ class FlappyBirdGame {
      */
     score;
 
+    /**
+     * 添加小鸟速度延迟
+     */
+    addSpeedDelay;
+
+    /**
+     * 小鸟上升延迟
+     */
+    birdUpDelay;
+
     constructor() {
         this.initial();
         this.initialCompleted();
@@ -90,6 +113,11 @@ class FlappyBirdGame {
         this.gameDecoration = new GameDecoration();
 
         this.gameDecoration.setScore(0);
+        this.addSpeedDelay = 211;
+        this.birdUpDelay = 6;
+
+        addBirdSpeedThrottle = throttle(this.bird.addSpeed, this.addSpeedDelay);
+        birdUpThrottle = throttle(this.bird.controlBirdUp, this.birdUpDelay);
     }
 
     initial() {
@@ -221,22 +249,33 @@ class FlappyBirdGame {
     keydownToControlBirdUp = (e) => {
         e.preventDefault();
         if (e.code === spaceCode) {
-            if (!this.getInControl()) {
-                /**
-                 * 这里目前存在一个问题:
-                 * 在玩家敲击空格一次时, 并且空格键弹起, 小鸟会向上飞翔一段距离
-                 * 但是这里设置了增加小鸟飞翔速度, 当向上冲刺结束后, 由于之前的几百毫秒
-                 * 时间在增加速度, 导致向下落时速度非常快。
-                 * 解决思路:
-                 * 可以设置一个变量, 在小鸟向上冲刺时间内, 不能增加速度
-                 */
-                this.addSpeed();
-                this.bird.springUp();
-                this.bird.setMoveDirection(MoveDirection.UP);
-                this.setInControl(true);
-            }
-            this.controlBirdUp();
+            if (this.getInControl()) return;
+
+            this.bird.resetSpeed();
+            this.setInControl(true);
+            this.bird.setMoveDirection(MoveDirection.UP);
+            this.controlUpBird();
         }
+    }
+
+    /**
+     * 控制小鸟上升
+     */
+    controlUpBird = () => {
+        requestAnimationFrame(() => {
+            if (!this.getInControl()) return;
+
+            this.birdUp();
+            this.addSpeed();
+            this.judgeCrash();
+
+            if (this.getCrashed()) return;
+            this.controlUpBird();
+        });
+    }
+
+    birdUp = () => {
+        birdUpThrottle.call(this.bird);
     }
 
     /**
@@ -246,10 +285,11 @@ class FlappyBirdGame {
     keyupToAutoBirdMove = (e) => {
         e.preventDefault();
         if (e.code === spaceCode) {
-            if (this.getInControl()) {
-                this.bird.setMoveDirection(MoveDirection.DOWN);
-                this.setInControl(false);
-            }
+            if (!this.getInControl()) return;
+
+            this.bird.resetSpeed();
+            this.setInControl(false);
+            this.bird.setMoveDirection(MoveDirection.DOWN);
             this.run();
         }
     }
@@ -300,6 +340,7 @@ class FlappyBirdGame {
      * 游戏开始
      */
     startGame = () => {
+        this.bird.resetSpeed();
         this.setPlaying(true);
         this.gameDecoration.clearAllImagesPath();
         this.removePauseClassName();
@@ -335,18 +376,9 @@ class FlappyBirdGame {
                     exec();
                 }
             });
+            this.addSpeed();
         }
         exec();
-        this.addSpeed();
-    }
-
-    /**
-     * 控制小鸟移动
-     */
-    controlBirdUp() {
-        if (this.getCrashed()) return;
-        this.bird.controlBirdUp();
-        this.judgeCrash();
     }
 
     /**
@@ -385,7 +417,20 @@ class FlappyBirdGame {
     birdCrash() {
         this.setCrashed(true);
         this.gameOver();
-        this.gameDecoration.showGameOver(this.getScore());
+
+        let score = this.getScore();
+        let highestScore = window.localStorage.getItem(HIGHEST_SCORE_KEY);
+
+        if(highestScore) {
+            highestScore = parseInt(highestScore);
+        } else {
+            highestScore = 0;
+        }
+        if(highestScore < score) {
+            highestScore = score;
+            window.localStorage.setItem(HIGHEST_SCORE_KEY, JSON.stringify(score));
+        }
+        this.gameDecoration.showGameOver(score, highestScore);
     }
 
     /**
@@ -401,26 +446,7 @@ class FlappyBirdGame {
      * 小鸟移动加速
      */
     addSpeed() {
-        let addable = true;
-        let performance = window.performance;
-        let startTime = performance.now();
-        let delay = 212;
-
-        let exec = () => {
-            window.requestAnimationFrame(() => {
-                // 每 delay 秒增加一次速度
-                let currentTime = performance.now();
-                if (addable && currentTime - startTime > delay) {
-                    startTime += delay;
-                    addable = this.bird.addSpeed();
-                }
-                // 如果返回 true 表示还可以增加速度
-                if (addable) {
-                    exec();
-                }
-            });
-        };
-        exec();
+        addBirdSpeedThrottle.call(this.bird);
     }
 
     addPauseClassName() {
@@ -474,10 +500,6 @@ class FlappyBirdGame {
         this.pipeHeight = pipeHeight;
     }
 
-    getPipeHeight() {
-        return this.pipeHeight;
-    }
-
     setScore(score) {
         this.score = score;
     }
@@ -487,4 +509,4 @@ class FlappyBirdGame {
     }
 }
 
-let flappyBirdGame = new FlappyBirdGame();
+console.log(new FlappyBirdGame());

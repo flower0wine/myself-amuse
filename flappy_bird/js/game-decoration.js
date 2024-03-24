@@ -164,12 +164,13 @@ class GameDecoration {
     /**
      * 游戏结束展示
      * @param score {number} 分数
+     * @param highestScore {number} 最高分数
      */
-    showGameOver(score) {
+    showGameOver(score, highestScore) {
         this.doms.middleImage.src = this.getImagePath(this.imagesName.gameOver);
         window.setTimeout(() => {
             this.clearAllImagesPath();
-            this.showScorePanel(score);
+            this.showScorePanel(score, highestScore);
         }, 2000);
     }
 
@@ -183,8 +184,9 @@ class GameDecoration {
     /**
      * 展示分数, 展示奖章, 展示以前的分数
      * @param score {number} 分数
+     * @param highestScore {number} 最高分数
      */
-    showScorePanel(score) {
+    showScorePanel(score, highestScore) {
         // 奖章
         let medal;
         this.showDom(this.doms.scorePanelContainer);
@@ -201,20 +203,21 @@ class GameDecoration {
         this.doms.scoreMedal.src = this.getImagePath(`medals_${medal}.png`);
 
         // 展示分数
-        let imageNameArr = this.resolveScore(score);
+        let scoreNumArr = this.resolveScore(score);
+        let highestScoreNumArr = this.resolveScore(highestScore);
         let scoreCount = this.doms.scoreCount;
         let previousScoreCount = this.doms.previousScoreCount;
         // 生成所需数量的图片 img
         // 当前游戏分数
-        for (let index = 0, length = imageNameArr.length; index < length; index++) {
+        for (let index = 0, length = scoreNumArr.length; index < length; index++) {
             let img = document.createElement("img");
-            img.src = imageNameArr[index];
+            img.src = scoreNumArr[index];
             scoreCount.append(img);
         }
         // 历史最高分数, 由于没有记录游戏分数, 所以照搬当前游戏分数, 要记录可以使用 localStorage
-        for (let index = 0, length = imageNameArr.length; index < length; index++) {
+        for (let index = 0, length = highestScoreNumArr.length; index < length; index++) {
             let img = document.createElement("img");
-            img.src = imageNameArr[index];
+            img.src = highestScoreNumArr[index];
             previousScoreCount.append(img);
         }
     }

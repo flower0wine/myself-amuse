@@ -121,10 +121,6 @@ $birdHeight: 28;
   animation: flying_0 500ms steps(4) infinite;
 }
 
-.spring-up {
-  transition: all 500ms ease-out;
-}
-
 @each $n in 0, 1, 2 {
   @keyframes flying_#{$n} {
     25% {

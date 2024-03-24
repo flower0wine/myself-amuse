@@ -6,7 +6,6 @@
 // 使用严格模式
 'use strict';
 
-const springUp = "spring-up";
 const wingAnimationClassName = "wing-animation";
 const xOffsetCSSVarName = "--bird-x-offset";
 
@@ -95,18 +94,6 @@ class Bird {
     reachBottomBoundary;
 
     /**
-     * 是否正在弹跳上升中, 这个属性存在的原因是键盘事件开始几百毫秒无法持续触发, 所以需要猛冲
-     * @type {boolean}
-     */
-    springUpping;
-
-    /**
-     * 弹跳高度
-     * @type {number}
-     */
-    springHeight;
-
-    /**
      * 小鸟动画名称
      * @type {string}
      */
@@ -122,9 +109,7 @@ class Bird {
         this.currentSkin = 0;
         this.skinList = [0, 1, 2];
         this.setInitialSpeed(1);
-        this.setSpringHeight(20);
         this.queryDom();
-        this.setSpringUpping(false);
         this.setReachBottomBoundary(false);
         this.setYOffset(200);
         this.setBirdXOffset(70);
@@ -178,7 +163,6 @@ class Bird {
      * 小鸟自动移动
      */
     birdAutoMove() {
-        if(this.getSpringUpping()) return;
         this.setBirdYOffset(this.getYOffset() + this.getSpeed());
     }
 
@@ -186,41 +170,16 @@ class Bird {
      * 控制小鸟上升
      */
     controlBirdUp() {
-        if(this.getSpringUpping()) return;
         this.setBirdYOffset(this.getYOffset() - this.getSpeed());
     }
 
     /**
-     * 弹跳上升, 减速上移指定像素高度
-     */
-    springUp() {
-        this.setSpringUpping(true);
-        let birdDom = this.getBirdDom();
-        let event = "transitionend";
-        let callback = () => {
-            birdDom.classList.remove(springUp);
-            birdDom.removeEventListener(event, callback);
-            this.setSpringUpping(false);
-        };
-        birdDom.addEventListener(event, callback);
-        birdDom.classList.add(springUp);
-        this.setBirdYOffset(this.getYOffset() - this.getSpringHeight());
-        birdDom.clientWidth;
-    }
-
-    /**
      * 增加小鸟的向上或向下的飞翔速度
-     * @return {boolean} 增加成功返回 true
      */
     addSpeed() {
-        if(this.getSpringUpping()) {
-            return true;
-        }
         if (this.getSpeed() < this.getMaxSpeed()) {
             this.setSpeed(this.getSpeed() + 1);
-            return true;
         }
-        return false;
     }
 
     resetSpeed() {
@@ -306,7 +265,6 @@ class Bird {
      */
     setMoveDirection(direction) {
         this.moveStatus.direction = direction;
-        this.resetSpeed();
     }
 
     getMoveDirection() {
@@ -337,22 +295,6 @@ class Bird {
         return this.reachBottomBoundary;
     }
 
-    setSpringUpping(springUpping) {
-        this.springUpping = springUpping;
-    }
-
-    getSpringUpping() {
-        return this.springUpping;
-    }
-
-    /**
-     * 返回小鸟的宽度
-     * @return {number} 宽度
-     */
-    getBirdWidth() {
-        return parseInt(getComputedStyle(this.birdDom).width);
-    }
-
     /**
      * 返回小鸟的高度
      * @return {number} 高度
@@ -367,14 +309,6 @@ class Bird {
 
     getInitialSpeed() {
         return this.initialSpeed;
-    }
-
-    setSpringHeight(springHeight) {
-        this.springHeight = springHeight;
-    }
-
-    getSpringHeight() {
-        return this.springHeight;
     }
 
     /**
