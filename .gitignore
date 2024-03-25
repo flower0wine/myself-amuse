@@ -6,3 +6,10 @@
 node_modules/
 .idea/
 
+target/
+
+*.iml
+*.md
+
+!README.md
+

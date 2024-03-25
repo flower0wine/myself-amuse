@@ -1,19 +1,15 @@
 package com.example.fragment.controller;
 
-import cn.hutool.crypto.SecureUtil;
-import com.example.fragment.enity.FileHistory;
+import com.example.fragment.enity.FileInfo;
 import com.example.fragment.enity.Result;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author flowerwine
@@ -22,101 +18,118 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/file")
 public class TestController {
-    private int CHUNK_SIZE;
-    /**
-     * 分片的暂存目录
-     */
-    private File dir;
-    /**
-     * 文件在服务端的名称
-     */
-    private String resultFileName;
-    /**
-     * 文件的后缀名
-     */
-    private String suffix;
-    /**
-     * 文件分片的 hash
-     */
-    private String[] fileHash;
-    /**
-     * 分片数量
-     */
-    private Integer chunkNumber;
-    /**
-     * 上传历史
-     */
-    private Map<String, FileHistory> map;
-    private final int bufferLength;
+    private final String tempDir = "B:/chunk/";
+
+    private final Map<String, FileInfo> fileInfoMap;
 
     public TestController() {
-        this.CHUNK_SIZE = 1 << 20;
-        this.bufferLength = 1 << 10;
-        this.dir = new File("B:/chunk");
-        map = new HashMap<>();
-    }
-
-    @PostMapping("/upload")
-    public Result<?> upload(@RequestParam("file") MultipartFile file, Integer index, Integer size, String name) throws IOException {
-        Result<?> result = this.checkFilename(name);
-        if (!result.success()) {
-            return Result.error();
-        }
-        // 判断当前索引对应的分片是否存在
-        if (this.fileHash[index] != null) {
-            return Result.error();
-        }
-        // 以索引作为分片名, 如索引为 1 则文件名为 1
-        File chunk = new File(this.dir, index + "");
-        chunk.createNewFile();
-        // 获取该分片的文件 hash, 分片的 hash 可以做文件秒传
-        String md5 = SecureUtil.md5(chunk);
-        fileHash[index] = md5;
-
-        file.transferTo(chunk);
-        return Result.ok(null);
+        fileInfoMap = new ConcurrentHashMap<>();
     }
 
     @GetMapping("/preupload")
-    public Result<?> preUpload(String filename, Integer size, String name) {
-        if (this.resultFileName == null) {
-            // 生成文件名
-            this.resultFileName = UUID.randomUUID().toString();
+    public Result<?> preUpload(String filename, Integer size) {
+        final int chunkSize = 1 << 20;
+        FileInfo fileInfo = getFileInfo(filename);
+
+        if(Objects.isNull(fileInfo)) {
+            fileInfo = new FileInfo();
+
             int dotIndex = filename.lastIndexOf(".");
-            this.suffix = filename.substring(dotIndex);
+            fileInfo.setFilenameFromClient(filename.substring(0, dotIndex));
+            fileInfo.setSuffix(filename.substring(dotIndex));
+
+            // 保存文件名
+            fileInfo.setFilenameFromClient(filename);
+            fileInfo.setFilenameFromServer(UUID.randomUUID().toString());
+
             int sum = 0;
             int length = 0;
             while (sum < size) {
-                sum += CHUNK_SIZE;
+                sum += chunkSize;
                 length++;
             }
-            this.chunkNumber = length;
-            this.fileHash = new String[length];
+            // 保存分片数量
+            fileInfo.setChunkCount(length);
+
+            fileInfo.setIsChunkUploadedArr(new boolean[length]);
+
+            // 创建分片上传的临时目录
+            String chunkTempDir = String.format("%s%s%s", this.tempDir, "chunk_", System.currentTimeMillis());
+            File file = createDirectory(chunkTempDir);
+            fileInfo.setChunkTempDir(file);
+
+            fileInfoMap.put(fileInfo.getFilenameFromServer(), fileInfo);
         }
 
-        // 查找已经存在的分片索引
-        AtomicInteger index = new AtomicInteger();
-        List<Integer> collect = Arrays.stream(fileHash).filter(Objects::nonNull).map((item) -> index.getAndIncrement()).collect(Collectors.toList());
+        fileInfo.setUploadTime(new Date());
+
+        // 查找已上传的分片索引
+        List<Integer> list = new ArrayList<>();
+        boolean[] isChunkUploadedArr = fileInfo.getIsChunkUploadedArr();
+
+        for(int i = 0; i < isChunkUploadedArr.length; i++) {
+            if(isChunkUploadedArr[i]) {
+                list.add(i);
+            }
+        }
 
         Map<String, Object> map = new HashMap<>(8);
-        map.put("size", this.CHUNK_SIZE);
-        map.put("filename", this.resultFileName);
-        map.put("chunkIndex", collect);
+        map.put("size", chunkSize);
+        map.put("filename", fileInfo.getFilenameFromServer());
+        map.put("chunkIndex", list);
         return Result.ok(map);
     }
 
-    @GetMapping("/uploaded")
-    public Result<?> uploaded(String name) throws IOException {
-        Result<?> result = this.checkFilename(name);
-        if (!result.success()) {
-            return Result.error();
+    @PostMapping("/uploading")
+    public Result<?> upload(@RequestParam("file") MultipartFile file, Integer index, String filename) throws IOException {
+        FileInfo fileInfo = getFileInfo(filename);
+
+        // 如果提供的文件名对应的 FileInfo 查找不到, 或者该分片已经存在
+        if(Objects.isNull(index) || Objects.isNull(fileInfo) || fileInfo.getIsChunkUploadedArr()[index]) {
+            return Result.clientError();
         }
-        File[] files = this.dir.listFiles();
-        RandomAccessFile writeFile = new RandomAccessFile(new File("B:/" + this.resultFileName + this.suffix), "rw");
+
+        // 创建分片文件
+        String chunkPath = String.format("%s/%s", fileInfo.getChunkTempDir().getAbsolutePath(), index);
+        File chunk = new File(chunkPath);
+        chunk.createNewFile();
+        file.transferTo(chunk);
+
+        // 设置该分片状态为已上传
+        fileInfo.getIsChunkUploadedArr()[index] = true;
+
+        return Result.ok(null);
+    }
+
+    @GetMapping("/merge")
+    public Result<?> uploaded(String filename) throws IOException {
+        FileInfo fileInfo = getFileInfo(filename);
+
+        if(Objects.isNull(fileInfo)) {
+            return Result.clientError();
+        } else {
+            // 检查所有分片是否均上传完毕
+            boolean[] isChunkUploadedArr = fileInfo.getIsChunkUploadedArr();
+            for(boolean b : isChunkUploadedArr) {
+                if(!b) {
+                    return Result.clientError();
+                }
+            }
+        }
+
+        final int chunkSize = 1 << 20;
+
+        // 拼接最终文件路径
+        File resultFile = new File("B:/" + fileInfo.getFilenameFromServer() + fileInfo.getSuffix());
+        RandomAccessFile writeFile = new RandomAccessFile((resultFile), "rw");
         RandomAccessFile readFile;
-        byte[] bytes = new byte[this.bufferLength];
+        byte[] bytes = new byte[chunkSize];
+
+        File[] files = fileInfo.getChunkTempDir().listFiles();
+
+        assert files != null;
         for (File file : files) {
-            int pos = this.CHUNK_SIZE * Integer.parseInt(file.getName());
+            int pos = chunkSize * Integer.parseInt(file.getName());
             writeFile.seek(pos);
             readFile = new RandomAccessFile(file, "r");
             while (readFile.read(bytes) != -1) {
@@ -125,46 +138,52 @@ public class TestController {
             readFile.close();
         }
         writeFile.close();
+
+        // 删除分片和临时目录
         for (File file : files) {
             file.delete();
         }
-        this.reset();
+        fileInfo.getChunkTempDir().delete();
+
+        // 清除文件信息
+        clearFileInfo(filename);
+
         return Result.ok(null);
     }
 
     @GetMapping("/cancel")
-    public Result<?> cancel(String name) {
-        Result<?> result = this.checkFilename(name);
-        if (!result.success()) {
-            return result;
+    public Result<?> cancel(String filename) {
+        FileInfo fileInfo = getFileInfo(filename);
+
+        if(Objects.isNull(fileInfo)) {
+            return Result.clientError();
         }
-        File[] files = this.dir.listFiles();
+
+        File[] files = fileInfo.getChunkTempDir().listFiles();
+        assert files != null;
         for (File file : files) {
             file.delete();
         }
-        this.reset();
+
+        // 清除文件信息
+        clearFileInfo(filename);
+
         return Result.ok(null);
     }
 
-    /**
-     * 判断传入的文件名是否与当前处理的文件名相同 (不包含后缀)
-     * @param name 文件名, 不包含后缀
-     * @return 相同返回 true, 反之返回 false
-     */
-    private Result<?> checkFilename(String name) {
-        if (this.resultFileName.equals(name)) {
-            return Result.ok(null);
-        }
-        return Result.error();
+    private FileInfo getFileInfo(String key) {
+        return this.fileInfoMap.get(key);
     }
 
-    /**
-     * 重置, 可以重新上传
-     */
-    private void reset() {
-        this.chunkNumber = 0;
-        this.fileHash = null;
-        this.resultFileName = null;
-        this.suffix = null;
+    private void clearFileInfo(String key) {
+        this.fileInfoMap.remove(key);
+    }
+
+    private File createDirectory(String path) {
+        File file = new File(path);
+        if(!file.exists()) {
+            file.mkdirs();
+        }
+        return file;
     }
 }

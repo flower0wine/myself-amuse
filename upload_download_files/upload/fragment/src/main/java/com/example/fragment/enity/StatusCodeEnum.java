@@ -10,9 +10,14 @@ public enum StatusCodeEnum {
      */
     SUCCESS(200),
     /**
-     * 错误
+     * 客户端错误
      */
-    ERROR(500);
+    CLIENT_ERROR(400),
+    /**
+     * 服务端错误
+     */
+    SERVER_ERROR(500),
+    ;
 
     private Integer code;
 

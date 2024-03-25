@@ -1,5 +1,7 @@
 package com.example;
 
+import java.util.Arrays;
+
 /**
  * @author flowerwine
  * @date 2023 年 12 月 03 日
@@ -23,8 +25,6 @@ public class Test {
     }
 
     public static void main(String[] args) {
-        System.out.println(judgeLevel(70, 20));
-        System.out.println(judgeLevel(65, 15));
-        System.out.println(judgeLevel(60, 10));
+        System.out.println(Arrays.toString(new boolean[10]));
     }
 }

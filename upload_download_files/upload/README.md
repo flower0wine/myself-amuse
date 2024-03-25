@@ -9,6 +9,27 @@
 ### 三、实现结果
 要查看具体的实现结果请移步到相应的文件夹下。
 
+#### 3.1. 项目版本迭代
+
+##### 3.1.1. FileUpload V1.0.0
+
+时间：2023年 12月 03日。
+
+- 实现功能：
+  - 实现文件的分片上传、断点续传。
+  - 实现服务端分片合并。
+
+##### 3.1.2. FileUpload V2.0.0
+
+时间：2024年 03月 25日。
+
+- 重构后端代码
+  - 原因：之前未能实现并发上传，一次只能上传一个文件，上传后服务端需要重启才能清除之前的 “文件残余”。
+- 实现功能：
+  - 实现文件并发上传。
+  - 实现文件后缀检查，阻止上传 `.exe` 文件。
+
+
 ### 四、项目解释
 
 
@@ -395,7 +416,8 @@ request({url, method = "get", params, data, progressHandler, abortHandler}) {
  * 上传前, 预热
  * @param file {File} 要上传的文件
  */
-preUpload(file) {
+preUpload(file)
+{
     this.request({
         url: PRE_UPLOAD_URL,
         params: {
@@ -418,7 +440,8 @@ preUpload(file) {
  * @param file {File} 要上传的文件
  * @param chunkIndex {[number]} 服务器给的未上传的分片索引
  */
-uploadFile(file, chunkIndex) {
+uploadFile(file, chunkIndex)
+{
     let chunkArr = this.createChunk(file, chunkIndex);
     this.changeDragBoard(UPLOADING);
     let filename = this.filename;
@@ -433,7 +456,7 @@ uploadFile(file, chunkIndex) {
             let chunkIndex = item.index;
             let requestItem;
             this.request({
-                url: UPLOAD_URL,
+                url: UPLOADING_URL,
                 method: "post",
                 params: {
                     index: chunkIndex,
@@ -481,10 +504,11 @@ uploadFile(file, chunkIndex) {
 /**
  * 上传完成, 请求服务器合并分片
  */
-uploaded() {
+uploaded()
+{
     let filename = this.filename;
     this.request({
-        url: UPLOADED_URL,
+        url: MERGE_URL,
         params: {
             name: filename
         }

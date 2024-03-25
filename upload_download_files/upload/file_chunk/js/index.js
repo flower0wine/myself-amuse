@@ -18,8 +18,8 @@ const UPLOADED = 2;
 let chunkSize = 1024 * 1024;
 // 上传的文件的 API 接口
 const PRE_UPLOAD_URL = "http://localhost:9090/huadiao/file/preupload";
-const UPLOAD_URL = "http://localhost:9090/huadiao/file/upload";
-const UPLOADED_URL = "http://localhost:9090/huadiao/file/uploaded";
+const UPLOADING_URL = "http://localhost:9090/huadiao/file/uploading";
+const MERGE_URL = "http://localhost:9090/huadiao/file/merge";
 const CANCEL_UPLOAD_URL = "http://localhost:9090/huadiao/file/cancel";
 
 const UPLOADING_CLASSNAME = "uploading";
@@ -196,7 +196,7 @@ class FileUploader {
         this.request({
             url: PRE_UPLOAD_URL,
             params: {
-                filename: file.name,
+                filename: this.filename ?? file.name,
                 size: file.size,
             },
         }).then((response) => {
@@ -226,16 +226,14 @@ class FileUploader {
         chunkArr.forEach((item, index) => {
             // 添加任务
             this.taskQueue.addTask((resolve, reject) => {
-                let size = item.file.size;
                 let chunkIndex = item.index;
                 let requestItem;
                 this.request({
-                    url: UPLOAD_URL,
+                    url: UPLOADING_URL,
                     method: "post",
                     params: {
                         index: chunkIndex,
-                        name: filename,
-                        size,
+                        filename,
                     },
                     data: {
                         file: chunkArr[index].file,
@@ -278,9 +276,9 @@ class FileUploader {
     uploaded() {
         let filename = this.filename;
         this.request({
-            url: UPLOADED_URL,
+            url: MERGE_URL,
             params: {
-                name: filename
+                filename
             }
         }).then(() => {
             this.changeDragBoard(UPLOADED);
@@ -291,10 +289,11 @@ class FileUploader {
     }
 
     cancelUpload() {
+        let filename = this.filename;
         this.request({
             url: CANCEL_UPLOAD_URL,
             params: {
-                name: this.filename,
+                filename,
             }
         }).then(() => {
             this.reset();

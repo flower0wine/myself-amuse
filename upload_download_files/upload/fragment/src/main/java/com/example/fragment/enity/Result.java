@@ -28,8 +28,8 @@ public class Result<T> {
         return new Result<>("ok", StatusCodeEnum.SUCCESS.getCode(), data);
     }
 
-    public static <T> Result<?> error() {
-        return new Result<>("error", StatusCodeEnum.ERROR.getCode(), null);
+    public static <T> Result<?> clientError() {
+        return new Result<>("clientError", StatusCodeEnum.CLIENT_ERROR.getCode(), null);
     }
 
     public boolean success() {
