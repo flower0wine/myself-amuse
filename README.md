@@ -7,6 +7,10 @@
 
 ### 三、目前包含的项目
 
+> 注意：
+> - flappy_bird 项目已于 2024年 04月 03日 迁移至新的仓库 [flappy-bird](https://github.com/flower0wine/flappy-bird) 
+> - stream_video 项目已于 2024年 04月 03日 迁移至新的仓库 [stream-video](https://github.com/flower0wine/stream-video)
+
 - concurrency_task: 使用 JavaScript 和 TypeScript 实现并发队列。
 - flappy_bird: 使用原生 JavaScript 实现管道小鸟游戏。
 - gobang: 使用原生的 JavaScript 实现五子棋。
